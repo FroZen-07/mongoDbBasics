@@ -1,5 +1,6 @@
 # mongoDbBasics
-#Basics Queries:
+# Basics Queries:
+
 C:\Users\bitan>mongo
 MongoDB shell version v5.0.18
 connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
