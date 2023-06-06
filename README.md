@@ -1,22 +1,6 @@
 # mongoDbBasics
 # Basics Queries:
 
-C:\Users\bitan>mongo
-MongoDB shell version v5.0.18
-connecting to: mongodb://127.0.0.1:27017/?compressors=disabled&gssapiServiceName=mongodb
-Implicit session: session { "id" : UUID("0bd67d1f-6c37-44a2-b65b-57eb428b2f13") }
-MongoDB server version: 5.0.18
-================
-Warning: the "mongo" shell has been superseded by "mongosh",
-which delivers improved usability and compatibility.The "mongo" shell has been deprecated and will be removed in
-an upcoming release.
-For installation instructions, see
-https://docs.mongodb.com/mongodb-shell/install/
-================
----
-The server generated these startup warnings when booting:
-        2023-06-06T04:56:44.602+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
----
 > show dbs
 admin   0.000GB
 config  0.000GB
@@ -109,6 +93,244 @@ WriteResult({ "nInserted" : 1 })
 { "_id" : ObjectId("647e7404a3946828b9496350"), "name" : "think in python", "pages" : 800, "price" : 4000 }
 { "_id" : ObjectId("647e7404a3946828b9496351"), "name" : "Javascript", "pages" : 300, "price" : 500 }
 { "_id" : ObjectId("647e7477a3946828b9496352"), "name" : "Finny Book", "pages" : 1000, "price" : 900, "author" : "John" }
-
+> db.books.insertOne({name:'Finny Book', pages:1000, price:900, author:['John', 'Doe']})
+{
+        "acknowledged" : true,
+        "insertedId" : ObjectId("647e7533a3946828b9496353")
+}
+> db.books.find()
+{ "_id" : ObjectId("647e738ea3946828b949634e"), "name" : "The complete Java book", "pages" : 500, "price" : 1000 }
+{ "_id" : ObjectId("647e73c6a3946828b949634f"), "name" : "think in Java", "pages" : 600, "price" : 2000 }
+{ "_id" : ObjectId("647e7404a3946828b9496350"), "name" : "think in python", "pages" : 800, "price" : 4000 }
+{ "_id" : ObjectId("647e7404a3946828b9496351"), "name" : "Javascript", "pages" : 300, "price" : 500 }
+{ "_id" : ObjectId("647e7477a3946828b9496352"), "name" : "Finny Book", "pages" : 1000, "price" : 900, "author" : "John" }
+{ "_id" : ObjectId("647e7533a3946828b9496353"), "name" : "Finny Book", "pages" : 1000, "price" : 900, "author" : [ "John", "Doe" ] }
+> db.books.update(
+... {_id: ObjectId("647e738ea3946828b949634e")},
+... {name:"Complete Reference Java", pages:450, price:700}
+... )
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.books.find()
+{ "_id" : ObjectId("647e738ea3946828b949634e"), "name" : "Complete Reference Java", "pages" : 450, "price" : 700 }
+{ "_id" : ObjectId("647e73c6a3946828b949634f"), "name" : "think in Java", "pages" : 600, "price" : 2000 }
+{ "_id" : ObjectId("647e7404a3946828b9496350"), "name" : "think in python", "pages" : 800, "price" : 4000 }
+{ "_id" : ObjectId("647e7404a3946828b9496351"), "name" : "Javascript", "pages" : 300, "price" : 500 }
+{ "_id" : ObjectId("647e7477a3946828b9496352"), "name" : "Finny Book", "pages" : 1000, "price" : 900, "author" : "John" }
+{ "_id" : ObjectId("647e7533a3946828b9496353"), "name" : "Finny Book", "pages" : 1000, "price" : 900, "author" : [ "John", "Doe" ] }
+> db.books.updateOne( {_id: ObjectId("647e7533a3946828b9496353")},{$set:{name:"Complete Reference Java", pages:450, price:700}})
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+> db.books.find()
+{ "_id" : ObjectId("647e738ea3946828b949634e"), "name" : "Complete Reference Java", "pages" : 450, "price" : 700 }
+{ "_id" : ObjectId("647e73c6a3946828b949634f"), "name" : "think in Java", "pages" : 600, "price" : 2000 }
+{ "_id" : ObjectId("647e7404a3946828b9496350"), "name" : "think in python", "pages" : 800, "price" : 4000 }
+{ "_id" : ObjectId("647e7404a3946828b9496351"), "name" : "Javascript", "pages" : 300, "price" : 500 }
+{ "_id" : ObjectId("647e7477a3946828b9496352"), "name" : "Finny Book", "pages" : 1000, "price" : 900, "author" : "John" }
+{ "_id" : ObjectId("647e7533a3946828b9496353"), "name" : "Complete Reference Java", "pages" : 450, "price" : 700, "author" : [ "John", "Doe" ] }
+> db.books.updateOne( {_id: ObjectId("647e7533a3946828b9496353")},{$rename:{name:"bookName"}})
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+> db.books.find()
+{ "_id" : ObjectId("647e738ea3946828b949634e"), "name" : "Complete Reference Java", "pages" : 450, "price" : 700 }
+{ "_id" : ObjectId("647e73c6a3946828b949634f"), "name" : "think in Java", "pages" : 600, "price" : 2000 }
+{ "_id" : ObjectId("647e7404a3946828b9496350"), "name" : "think in python", "pages" : 800, "price" : 4000 }
+{ "_id" : ObjectId("647e7404a3946828b9496351"), "name" : "Javascript", "pages" : 300, "price" : 500 }
+{ "_id" : ObjectId("647e7477a3946828b9496352"), "name" : "Finny Book", "pages" : 1000, "price" : 900, "author" : "John" }
+{ "_id" : ObjectId("647e7533a3946828b9496353"), "pages" : 450, "price" : 700, "author" : [ "John", "Doe" ], "bookName" : "Complete Reference Java" }
+> db.books.update({pages:800},{$rename:{name:"bookNName"}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.books.find()
+{ "_id" : ObjectId("647e738ea3946828b949634e"), "name" : "Complete Reference Java", "pages" : 450, "price" : 700 }
+{ "_id" : ObjectId("647e73c6a3946828b949634f"), "name" : "think in Java", "pages" : 600, "price" : 2000 }
+{ "_id" : ObjectId("647e7404a3946828b9496350"), "pages" : 800, "price" : 4000, "bookNName" : "think in python" }
+{ "_id" : ObjectId("647e7404a3946828b9496351"), "name" : "Javascript", "pages" : 300, "price" : 500 }
+{ "_id" : ObjectId("647e7477a3946828b9496352"), "name" : "Finny Book", "pages" : 1000, "price" : 900, "author" : "John" }
+{ "_id" : ObjectId("647e7533a3946828b9496353"), "pages" : 450, "price" : 700, "author" : [ "John", "Doe" ], "bookName" : "Complete Reference Java" }
+> db.books.update({pages:800},{$inc:{price:50}})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.books.find()
+{ "_id" : ObjectId("647e738ea3946828b949634e"), "name" : "Complete Reference Java", "pages" : 450, "price" : 700 }
+{ "_id" : ObjectId("647e73c6a3946828b949634f"), "name" : "think in Java", "pages" : 600, "price" : 2000 }
+{ "_id" : ObjectId("647e7404a3946828b9496350"), "pages" : 800, "price" : 4050, "bookNName" : "think in python" }
+{ "_id" : ObjectId("647e7404a3946828b9496351"), "name" : "Javascript", "pages" : 300, "price" : 500 }
+{ "_id" : ObjectId("647e7477a3946828b9496352"), "name" : "Finny Book", "pages" : 1000, "price" : 900, "author" : "John" }
+{ "_id" : ObjectId("647e7533a3946828b9496353"), "pages" : 450, "price" : 700, "author" : [ "John", "Doe" ], "bookName" : "Complete Reference Java" }
+> db.books.remove({_id: ObjectId("647e738ea3946828b949634e")})
+WriteResult({ "nRemoved" : 1 })
+> db.books.find()
+{ "_id" : ObjectId("647e73c6a3946828b949634f"), "name" : "think in Java", "pages" : 600, "price" : 2000 }
+{ "_id" : ObjectId("647e7404a3946828b9496350"), "pages" : 800, "price" : 4050, "bookNName" : "think in python" }
+{ "_id" : ObjectId("647e7404a3946828b9496351"), "name" : "Javascript", "pages" : 300, "price" : 500 }
+{ "_id" : ObjectId("647e7477a3946828b9496352"), "name" : "Finny Book", "pages" : 1000, "price" : 900, "author" : "John" }
+{ "_id" : ObjectId("647e7533a3946828b9496353"), "pages" : 450, "price" : 700, "author" : [ "John", "Doe" ], "bookName" : "Complete Reference Java" }
+> db.books.find()
+{ "_id" : ObjectId("647e73c6a3946828b949634f"), "name" : "think in Java", "pages" : 600, "price" : 2000 }
+{ "_id" : ObjectId("647e7404a3946828b9496350"), "pages" : 800, "price" : 4050, "bookNName" : "think in python" }
+{ "_id" : ObjectId("647e7404a3946828b9496351"), "name" : "Javascript", "pages" : 300, "price" : 500 }
+{ "_id" : ObjectId("647e7477a3946828b9496352"), "name" : "Finny Book", "pages" : 1000, "price" : 900, "author" : "John" }
+{ "_id" : ObjectId("647e7533a3946828b9496353"), "pages" : 450, "price" : 700, "author" : [ "John", "Doe" ], "bookName" : "Complete Reference Java" }
+> db.books.find().pretty()
+{
+        "_id" : ObjectId("647e73c6a3946828b949634f"),
+        "name" : "think in Java",
+        "pages" : 600,
+        "price" : 2000
+}
+{
+        "_id" : ObjectId("647e7404a3946828b9496350"),
+        "pages" : 800,
+        "price" : 4050,
+        "bookNName" : "think in python"
+}
+{
+        "_id" : ObjectId("647e7404a3946828b9496351"),
+        "name" : "Javascript",
+        "pages" : 300,
+        "price" : 500
+}
+{
+        "_id" : ObjectId("647e7477a3946828b9496352"),
+        "name" : "Finny Book",
+        "pages" : 1000,
+        "price" : 900,
+        "author" : "John"
+}
+{
+        "_id" : ObjectId("647e7533a3946828b9496353"),
+        "pages" : 450,
+        "price" : 700,
+        "author" : [
+                "John",
+                "Doe"
+        ],
+        "bookName" : "Complete Reference Java"
+}
+> db.books.find().limit(2)
+{ "_id" : ObjectId("647e73c6a3946828b949634f"), "name" : "think in Java", "pages" : 600, "price" : 2000 }
+{ "_id" : ObjectId("647e7404a3946828b9496350"), "pages" : 800, "price" : 4050, "bookNName" : "think in python" }
+> db.books.find().limit(2).pretty()
+{
+        "_id" : ObjectId("647e73c6a3946828b949634f"),
+        "name" : "think in Java",
+        "pages" : 600,
+        "price" : 2000
+}
+{
+        "_id" : ObjectId("647e7404a3946828b9496350"),
+        "pages" : 800,
+        "price" : 4050,
+        "bookNName" : "think in python"
+}
+> db.books.find().limit(2).sort({price:1}).pretty()
+{
+        "_id" : ObjectId("647e7404a3946828b9496351"),
+        "name" : "Javascript",
+        "pages" : 300,
+        "price" : 500
+}
+{
+        "_id" : ObjectId("647e7533a3946828b9496353"),
+        "pages" : 450,
+        "price" : 700,
+        "author" : [
+                "John",
+                "Doe"
+        ],
+        "bookName" : "Complete Reference Java"
+}
+> db.books.find().limit(2).sort({price:-1}).pretty()
+{
+        "_id" : ObjectId("647e7404a3946828b9496350"),
+        "pages" : 800,
+        "price" : 4050,
+        "bookNName" : "think in python"
+}
+{
+        "_id" : ObjectId("647e73c6a3946828b949634f"),
+        "name" : "think in Java",
+        "pages" : 600,
+        "price" : 2000
+}
+> db.books.find().sort({price:-1}).pretty()
+{
+        "_id" : ObjectId("647e7404a3946828b9496350"),
+        "pages" : 800,
+        "price" : 4050,
+        "bookNName" : "think in python"
+}
+{
+        "_id" : ObjectId("647e73c6a3946828b949634f"),
+        "name" : "think in Java",
+        "pages" : 600,
+        "price" : 2000
+}
+{
+        "_id" : ObjectId("647e7477a3946828b9496352"),
+        "name" : "Finny Book",
+        "pages" : 1000,
+        "price" : 900,
+        "author" : "John"
+}
+{
+        "_id" : ObjectId("647e7533a3946828b9496353"),
+        "pages" : 450,
+        "price" : 700,
+        "author" : [
+                "John",
+                "Doe"
+        ],
+        "bookName" : "Complete Reference Java"
+}
+{
+        "_id" : ObjectId("647e7404a3946828b9496351"),
+        "name" : "Javascript",
+        "pages" : 300,
+        "price" : 500
+}
+> db.books.find().sort({price:1}).pretty()
+{
+        "_id" : ObjectId("647e7404a3946828b9496351"),
+        "name" : "Javascript",
+        "pages" : 300,
+        "price" : 500
+}
+{
+        "_id" : ObjectId("647e7533a3946828b9496353"),
+        "pages" : 450,
+        "price" : 700,
+        "author" : [
+                "John",
+                "Doe"
+        ],
+        "bookName" : "Complete Reference Java"
+}
+{
+        "_id" : ObjectId("647e7477a3946828b9496352"),
+        "name" : "Finny Book",
+        "pages" : 1000,
+        "price" : 900,
+        "author" : "John"
+}
+{
+        "_id" : ObjectId("647e73c6a3946828b949634f"),
+        "name" : "think in Java",
+        "pages" : 600,
+        "price" : 2000
+}
+{
+        "_id" : ObjectId("647e7404a3946828b9496350"),
+        "pages" : 800,
+        "price" : 4050,
+        "bookNName" : "think in python"
+}
+> dbb.books.find({price:{$eq:4050}})
+uncaught exception: ReferenceError: dbb is not defined :
+@(shell):1:1
+> db.books.find({price:{$eq:4050}})
+{ "_id" : ObjectId("647e7404a3946828b9496350"), "pages" : 800, "price" : 4050, "bookNName" : "think in python" }
+> db.books.find({price:{$gt:500}})
+{ "_id" : ObjectId("647e73c6a3946828b949634f"), "name" : "think in Java", "pages" : 600, "price" : 2000 }
+{ "_id" : ObjectId("647e7404a3946828b9496350"), "pages" : 800, "price" : 4050, "bookNName" : "think in python" }
+{ "_id" : ObjectId("647e7477a3946828b9496352"), "name" : "Finny Book", "pages" : 1000, "price" : 900, "author" : "John" }
+{ "_id" : ObjectId("647e7533a3946828b9496353"), "pages" : 450, "price" : 700, "author" : [ "John", "Doe" ], "bookName" : "Complete Reference Java" }
+>
 
 
